@@ -1,1 +1,6 @@
 *.csv
+*.un
+*.un~
+.ipynb_checkpoints
+*~
+*.png
