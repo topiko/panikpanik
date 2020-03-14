@@ -1,13 +1,23 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[21]:
 
 
 import pandas as pd
 import subprocess 
+import datetime 
 
-load_new = True #False
+load_new = False
+try:
+    data = pd.read_csv('data.csv')
+except FileNotFoundError:
+    load_new = True
+
+data['date'] = pd.to_datetime(data['date'], format='%Y-%m-%d') #, data.dtypes
+
+if datetime.datetime.now().date() - data.date.max().date() > datetime.timedelta(days = 1):
+    load_new = True
 
 if load_new:
     print('Download data:')
@@ -15,17 +25,11 @@ if load_new:
 
 data = pd.read_csv('data.csv')
 data['date'] = pd.to_datetime(data['date'], format='%Y-%m-%d') #, data.dtypes
-
+print('Latest date: {}'.format(data.date.max().date()))
 data.head()
 
 
-# In[3]:
-
-
-data.dtypes
-
-
-# In[65]:
+# In[22]:
 
 
 import matplotlib.pyplot as plt
@@ -102,7 +106,7 @@ def plot_fig1(mask, title, ax):
 
 
 # select countries:
-minncases = 100
+minncases = 30
 remove_countries = ['International', 'China']
 countries = []
 for country in data.location.unique():
@@ -133,7 +137,7 @@ plt.savefig('countries.pdf', facecolor=fig.get_facecolor(), transparent=True)
 plt.savefig('countries.png', dpi = 200, facecolor=fig.get_facecolor(), transparent=True)
 plt.show()
 
-'''
+
 # ### Solve a spread model:
 
 # In[55]:
@@ -177,4 +181,4 @@ t = np.linspace(0,80,100)
 
 plt.plot(t, y_(t, N, a))
 plt.show()
-'''
+
